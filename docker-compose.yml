@@ -1,0 +1,24 @@
+services:
+  arch-mirror:
+    build: ./arch-mirror
+    volumes:
+      - "/mnt/zpool1/media/arch-repository/:/arch-repository:rw"
+      - "/mnt/zpool1/media/tmp/arch-repository/:/tmp/arch-repository:rw"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+  daemon:
+    cpu_shares: 100
+    cpus: "0.25"
+    environment:
+      IPFS_PROFILE: badgerds
+    image: ipfs/go-ipfs:release
+    mem_limit: 3G
+    ports:
+      - 4001:4001/tcp # public
+      - 127.0.0.1:5001:5001/tcp
+    volumes:
+      - ./arch-mirror/arch-repository/:/arch-repository:ro
+      - ipfs_data:/data/ipfs:rw
+      - ./config.json:/data/ipfs/config:rw
+version: "2.2"
+volumes:
+  ipfs_data: {}
