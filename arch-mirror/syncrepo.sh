@@ -75,12 +75,12 @@ if [[ -f "$target/lastupdate" ]] && diff -b <(curl -Ls "$lastupdate_url") "$targ
 fi
 
 rsync_cmd \
-	--exclude='*.links.tar.gz*' \
+	--exclude='*.links.tar.*' \
 	--exclude='/other' \
 	--exclude='/archive' \
 	--exclude='/sources' \
 	--exclude='/iso' \
-    --exclude='/*/*' \
+    --exclude='/pool' \
 	"${source_url}" \
 	"${target}"
 
