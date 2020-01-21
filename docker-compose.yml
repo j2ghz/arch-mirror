@@ -1,10 +1,11 @@
 services:
   arch-mirror:
     build: ./arch-mirror
+    image: j2ghz/arch-mirror
     volumes:
-      - "/mnt/zpool1/media/arch-repository/:/arch-repository:rw"
-      - "/mnt/zpool1/media/tmp/arch-repository/:/tmp/arch-repository:rw"
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      - shared:/shared:rw
+    depends_on: 
+      - daemon
   daemon:
     cpu_shares: 100
     cpus: "0.25"
@@ -12,13 +13,16 @@ services:
       IPFS_PROFILE: badgerds
     image: ipfs/go-ipfs:release
     mem_limit: 3G
-    ports:
-      - 4001:4001/tcp # public
-      - 127.0.0.1:5001:5001/tcp
+    #ports:
+      #- 4001:4001/tcp # public
+      #- 127.0.0.1:5001:5001/tcp # API
+      #- 127.0.0.1:8080:8080/tcp # Proxy
     volumes:
-      - ./arch-mirror/arch-repository/:/arch-repository:ro
+      #- ./arch-mirror/arch-repository/:/arch-repository:ro
       - ipfs_data:/data/ipfs:rw
-      - ./config.json:/data/ipfs/config:rw
+      #- ./config.json:/data/ipfs/config:rw
+      - shared:/shared:ro
 version: "2.2"
 volumes:
   ipfs_data: {}
+  shared: {}

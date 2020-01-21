@@ -10,7 +10,7 @@ set -e
 # lot of traffic.
 
 # Directory where the repo is stored locally. Example: /srv/repo
-target="/arch-repository"
+target="/shared/arch-repository"
 
 # Directory where files are downloaded to before being moved in place.
 # This should be on the same filesystem as $target, but not a subdirectory of $target.
@@ -80,6 +80,7 @@ rsync_cmd \
 	--exclude='/archive' \
 	--exclude='/sources' \
 	--exclude='/iso' \
+    --exclude='/*/*' \
 	"${source_url}" \
 	"${target}"
 
