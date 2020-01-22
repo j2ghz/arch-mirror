@@ -20,6 +20,10 @@ echo "## Setting IPFS config"
 ipfsa config --json Experimental.ShardingEnabled true
 ipfsa config --json Experimental.FilestoreEnabled true
 ipfsa config --json Datastore.NoSync true
+ipfsa config Reprovider.Interval 10m
+ipfsa config --json Swarm.EnableAutoRelay true
+ipfsa config --json Swarm.ConnMgr.HighWater 4000 # when above this many connections
+ipfsa config --json Swarm.ConnMgr.LowWater 3000 # close some until this many
 
 echo "## Generate IPNS key"
 ipfsa key gen --type=rsa --size=2048 "arch-repository" || true
@@ -28,13 +32,14 @@ echo "Adding 'arch-repository/' to IPFS"
 
 # TODO should be with --nocopy but bug in the way...
 # ipfs add -r --raw-leaves --local --nocopy ./arch-repository | tee hash-list
-ipfsa add --offline -r --raw-leaves /shared/arch-repository | tee hash-list
+ipfsa add -r --raw-leaves /shared/arch-repository | tee hash-list
 HASH="$(tail -n1 hash-list | cut -d ' ' -f2)"
 
 echo "Final hash is $HASH, publishing on IPNS"
 ipfsa name publish --key="arch-repository" /ipfs/$HASH
 
 # curl -X PUT -H "Content-Type: application/json" -H "X-Api-Key: $APIKEY" -d "{\"rrset_values\": [\"dnslink=/ipfs/$HASH\"]}" https://dns.api.gandi.net/api/v5/domains/$ZONE/records/$RECORD/TXT | jq .
+
 #curl -X PUT "https://api.cloudflare.com/client/v4/zones/9b33713d659458edf28a11f984d2d5fa/dns_records/1bb386650186fdc3c278373f11353c73" \
 #     -H "Authorization: Bearer <token here>" \
 #     -H "Content-Type: application/json" \

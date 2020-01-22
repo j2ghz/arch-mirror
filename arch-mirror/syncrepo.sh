@@ -75,12 +75,12 @@ if [[ -f "$target/lastupdate" ]] && diff -b <(curl -Ls "$lastupdate_url") "$targ
 fi
 
 rsync_cmd \
-	--exclude='*.links.tar.*' \
-	--exclude='/other' \
-	--exclude='/archive' \
-	--exclude='/sources' \
-	--exclude='/iso' \
-    --exclude='/pool' \
+#	--exclude='*.links.tar.*' \
+#	--exclude='/other' \
+#	--exclude='/archive' \
+#	--exclude='/sources' \
+#	--exclude='/iso' \
+#	--exclude='/pool' \
 	"${source_url}" \
 	"${target}"
 
@@ -90,4 +90,4 @@ echo "Last update was $(date -d @$(cat ${target}/lastupdate))" >> "${target}/inf
 echo "Last IPFS update was $(date)" >> "${target}/info.txt"
 
 # Removing symlinks
-#find $target -type l -exec ./remove-symlink.sh {} +
+find $target -type l -exec ./remove-symlink.sh {} +
