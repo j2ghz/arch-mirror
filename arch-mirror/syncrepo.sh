@@ -90,4 +90,4 @@ echo "Last update was $(date -d @$(cat ${target}/lastupdate))" >> "${target}/inf
 echo "Last IPFS update was $(date)" >> "${target}/info.txt"
 
 # Removing symlinks
-find /arch-repository -type l -exec ./remove-symlink.sh {} +
+find $target -type l -exec ./remove-symlink.sh {} +
